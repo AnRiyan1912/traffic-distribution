@@ -13,6 +13,16 @@ class ProductService {
   async createProduct(data) {
     validationProduct(data);
     const { vendorId, productName, modal, qty, sellingPrice } = data;
+    const getExistingProduct = await this.#productRepository.getAll(vendorId);
+    console.log(getExistingProduct);
+    const findProductExisting = getExistingProduct.find(
+      (item) => item.nama_product === productName
+    );
+
+    if (findProductExisting) {
+      throw new Error("product is already exist");
+    }
+
     return await this.#productRepository.create(
       vendorId,
       productName,
@@ -25,7 +35,10 @@ class ProductService {
   async getByIdProduct(data) {
     validationProductGetById(data);
     const { productId, vendorId } = data;
-    return await this.#productRepository.findById(productId, vendorId);
+    return await this.#productRepository.findByIdAndVendorId(
+      productId,
+      vendorId
+    );
   }
 
   async getAllProduct(vendorId) {

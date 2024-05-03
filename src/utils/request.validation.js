@@ -40,7 +40,6 @@ const validationProductPriceGetById = (data) => {
 module.exports = {
   validationVendor,
   validationProduct,
-  validationProductPrice,
   validationProductPriceGetById,
   validationProductGetById,
 };

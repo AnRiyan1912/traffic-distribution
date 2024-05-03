@@ -1,8 +1,6 @@
 const { ProductService } = require("../services/product.service");
-const { ProductPriceService } = require("../services/productPrice.service");
 
 const productService = new ProductService();
-const productPriceService = new ProductPriceService();
 const productController = {
   create: async (req, res) => {
     try {
@@ -32,9 +30,12 @@ const productController = {
         productId: parseInt(req.params.productId),
       };
       const responseProduct = await productService.getByIdProduct(dataRequest);
-      if (!responseProduct) {
+      if (!responseProduct[0]) {
         throw new Error("product not found");
       }
+      res
+        .status(200)
+        .json({ message: "success get product", data: responseProduct[0] });
     } catch (err) {
       console.log(err.message);
       if (err.message === "Cannot read properties of null (reading 'id')") {
@@ -47,7 +48,7 @@ const productController = {
 
   getAll: async (req, res) => {
     try {
-      const vendorId = req.params.vendorId;
+      const vendorId = parseInt(req.params.vendorId);
       const responseGetProduct = await productService.getAllProduct(vendorId);
       res
         .status(200)
@@ -55,6 +56,23 @@ const productController = {
     } catch (err) {
       res.status(400).json({ message: err.message });
     }
+  },
+
+  update: async (req, res) => {
+    try {
+      const {
+        id,
+        vendor_id,
+        nama_product,
+        tanggal_masuk,
+        modal,
+        qty,
+        harga_jual,
+        is_active,
+        created_at,
+        updated_at,
+      } = req.body;
+    } catch (err) {}
   },
 };
 
