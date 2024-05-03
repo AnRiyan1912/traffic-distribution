@@ -1,0 +1,42 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model m_vendor {
+  id             Int @id @default(autoincrement())
+  nama_vendor    String
+  tanggal_gabung DateTime @default(now()) @db.Date
+  products       m_product[]
+  created_at     DateTime @default(now())
+  updated_at     DateTime @updatedAt
+}
+
+model m_product {
+  id             Int @id @default(autoincrement())
+  vendor m_vendor @relation(fields: [vendor_id], references: [id])
+  vendor_id      Int @unique
+  nama_product   String
+  tanggal_masuk  DateTime @default(now()) @db.Date
+  modal          Decimal @db.Decimal(10, 0)
+  qty            Int
+  harga_jual     Decimal @db.Decimal(10, 0)
+  reports        m_report[]
+  is_active      Boolean @default(true)
+  created_at     DateTime @default(now())
+  updated_at     DateTime @updatedAt
+}
+
+model m_report {
+  id Int
+  product m_product @relation(fields: [product_id], references: [id])
+  product_id     Int @unique
+  qty            Int 
+  profit         Decimal @db.Decimal(10, 0)
+  created_at     DateTime @default(now())
+  updated_at     DateTime @updatedAt
+}
