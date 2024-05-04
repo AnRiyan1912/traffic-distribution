@@ -22,6 +22,14 @@ class VendorRepository {
 
     return response;
   }
+
+  async getById(vendorId) {
+    const response = await this.#db.m_vendor.findUnique({
+      where: { id: vendorId },
+    });
+
+    return response;
+  }
 }
 
 module.exports = { VendorRepository };

@@ -13,10 +13,14 @@ class VendorService {
     const checkExistingVendor = await this.#vendorRepository.checkExistVendor(
       vendorName
     );
-    if (checkExistingVendor) {
+    if (checkExistingVendor[0]) {
       throw new Error("vendor already exist");
     }
     return await this.#vendorRepository.create(vendorName);
+  }
+
+  async getVendorById(vendorId) {
+    return await this.#vendorRepository.getById(vendorId);
   }
 }
 

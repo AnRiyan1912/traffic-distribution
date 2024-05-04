@@ -29,10 +29,9 @@ const productController = {
         vendorId: parseInt(req.params.vendorId),
         productId: parseInt(req.params.productId),
       };
-      const responseProduct = await productService.getByIdProduct(dataRequest);
-      if (!responseProduct[0]) {
-        throw new Error("product not found");
-      }
+      const responseProduct = await productService.getByVendorIdAndProductId(
+        dataRequest
+      );
       res
         .status(200)
         .json({ message: "success get product", data: responseProduct[0] });
@@ -60,19 +59,37 @@ const productController = {
 
   update: async (req, res) => {
     try {
-      const {
-        id,
-        vendor_id,
-        nama_product,
-        tanggal_masuk,
-        modal,
-        qty,
-        harga_jual,
-        is_active,
-        created_at,
-        updated_at,
-      } = req.body;
-    } catch (err) {}
+      const requestUpdate = {
+        id: req.body.id,
+        vendorId: req.body.vendor_id,
+        productName: req.body.nama_product,
+        dateOfEntry: req.body.tanggal_masuk,
+        modal: req.body.modal,
+        qty: req.body.qty,
+        sellingPrice: req.body.harga_jual,
+        isActive: req.body.is_active,
+        createdAt: req.body.created_at,
+        updatedAt: req.body.updated_at,
+      };
+
+      const response = await productService.updateProduct(requestUpdate);
+      res
+        .status(200)
+        .json({ message: "success update product", data: response });
+    } catch (err) {
+      console.log(err);
+      res.status(400).json({ message: err.message });
+    }
+  },
+
+  delete: async (req, res) => {
+    try {
+      const { productId, vendorId } = req.params;
+      await productService.deleteProduct(productId, vendorId);
+      res.status(200).json({ message: "success delete product" });
+    } catch (err) {
+      res.status(400).json({ message: err.message });
+    }
   },
 };
 
