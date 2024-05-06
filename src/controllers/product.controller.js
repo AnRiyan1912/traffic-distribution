@@ -11,12 +11,12 @@ const productController = {
         qty: req.body.qty,
         sellingPrice: req.body.harga_jual,
       };
-      const responseCraeteProduct = await productService.createProduct(
+      const responseCreateProduct = await productService.createProduct(
         dataRequest
       );
       res.status(200).json({
         message: "sucess create product",
-        data: responseCraeteProduct,
+        data: responseCreateProduct,
       });
     } catch (err) {
       res.status(400).json({ message: err.message });
@@ -45,10 +45,23 @@ const productController = {
     }
   },
 
-  getAll: async (req, res) => {
+  getAllProduct: async (req, res) => {
+    try {
+      const productResponse = await productService.getAllProduct();
+      res
+        .status(200)
+        .json({ message: "success get all product", data: productResponse });
+    } catch (err) {
+      res.status(400).json({ message: err.message });
+    }
+  },
+
+  getAllByVendorId: async (req, res) => {
     try {
       const vendorId = parseInt(req.params.vendorId);
-      const responseGetProduct = await productService.getAllProduct(vendorId);
+      const responseGetProduct = await productService.getAllProductByVendorId(
+        vendorId
+      );
       res
         .status(200)
         .json({ message: "success get all product", data: responseGetProduct });
@@ -71,7 +84,6 @@ const productController = {
         createdAt: req.body.created_at,
         updatedAt: req.body.updated_at,
       };
-
       const response = await productService.updateProduct(requestUpdate);
       res
         .status(200)

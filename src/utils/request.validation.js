@@ -22,12 +22,12 @@ const validationProduct = (data) => {
   }
 };
 
-const validationProductGetById = (data) => {
-  if (!data.productId) {
-    throw new Error("productId in route is required");
+const validationProductGetById = (productId, vendorId) => {
+  if (!productId) {
+    throw new Error("productId is required");
   }
-  if (!data.vendorId) {
-    throw new Error("vendorId in route is required");
+  if (!vendorId) {
+    throw new Error("vendorId is required");
   }
 };
 
@@ -53,7 +53,7 @@ const validationUpdateProduct = (data) => {
   if (!data.modal) {
     throw new Error("modal is required");
   }
-  if (!data.qty) {
+  if (!data.qty && qty < 0) {
     throw new Error("qty is required");
   }
   if (!data.sellingPrice) {
@@ -70,10 +70,20 @@ const validationUpdateProduct = (data) => {
   }
 };
 
+const validationOrder = (data) => {
+  if (!data.productId) {
+    throw new Error("product_id is required");
+  }
+  if (!data.qty) {
+    throw new Error("qty is required");
+  }
+};
+
 module.exports = {
   validationVendor,
   validationProduct,
   validationProductPriceGetById,
   validationProductGetById,
   validationUpdateProduct,
+  validationOrder,
 };

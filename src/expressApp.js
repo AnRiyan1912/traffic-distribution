@@ -12,17 +12,20 @@ expressApp.post("/products", controllers.productController.create);
 expressApp.patch("/products", controllers.productController.update);
 expressApp.get(
   "/vendors/:vendorId/products",
-  controllers.productController.getAll
+  controllers.productController.getAllByVendorId
 );
 expressApp.get(
   "/vendors/:vendorId/products/:productId",
   controllers.productController.getById
 );
+expressApp.get("/products", controllers.productController.getAllProduct);
 expressApp.delete(
   "/vendors/:vendorId/products/:productId",
   controllers.productController.delete
 );
 
-expressApp.post("/order");
+expressApp.get("/reports", controllers.reportController.getReportByDate);
+
+expressApp.post("/orders", controllers.orderController.create);
 
 module.exports = expressApp;

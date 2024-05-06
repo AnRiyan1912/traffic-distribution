@@ -18,14 +18,17 @@ class ProductService {
 
   async createProduct(data) {
     validationProduct(data);
-    const { vendorId, productName, modal, qty, sellingPrice } = data;
+    let { vendorId, productName, modal, qty, sellingPrice } = data;
+    productName = String(productName).toLowerCase();
     const checkExistingVendor = await this.#vendorService.getVendorById(
       data.vendorId
     );
     if (!checkExistingVendor) {
       throw new Error("vendor not already exist");
     }
-    const getExistingProduct = await this.#productRepository.getAll(vendorId);
+    const getExistingProduct = await this.#productRepository.getAllByVendorId(
+      vendorId
+    );
     const findProductExisting = getExistingProduct.find(
       (item) => item.nama_product === productName
     );
@@ -50,9 +53,8 @@ class ProductService {
     return response;
   }
 
-  async getByVendorIdAndProductId(data) {
-    validationProductGetById(data);
-    const { productId, vendorId } = data;
+  async getByVendorIdAndProductId(productId, vendorId) {
+    validationProductGetById(productId, vendorId);
     const response = await this.#productRepository.findByIdAndVendorId(
       productId,
       vendorId
@@ -63,8 +65,8 @@ class ProductService {
     return response;
   }
 
-  async getAllProduct(vendorId) {
-    return await this.#productRepository.getAll(vendorId);
+  async getAllProductByVendorId(vendorId) {
+    return await this.#productRepository.getAllByVendorId(vendorId);
   }
 
   async updateProduct(data) {
@@ -73,7 +75,11 @@ class ProductService {
       data.id,
       data.vendorId
     );
-    if (data.sellingPrice == checkUpdateSellingPrice[0].harga_jual) {
+    console.log(checkUpdateSellingPrice[0].harga_jual);
+    if (
+      parseInt(data.sellingPrice) ===
+      parseInt(checkUpdateSellingPrice[0].harga_jual)
+    ) {
       data["updatedAt"] = getDateFormatDb();
       return this.#productRepository.update(data);
     } else {
@@ -81,7 +87,7 @@ class ProductService {
       this.#productRepository.update(data);
       const { vendorId, productName, modal, dateOfEntry, qty, sellingPrice } =
         data;
-      return this.#productRepository.createProductAfterUpdateSellingPrice(
+      return await this.#productRepository.createProductAfterUpdateSellingPrice(
         vendorId,
         productName,
         modal,
@@ -96,7 +102,16 @@ class ProductService {
     const dataRequest = { productId, vendorId };
     const findProduct = await this.getByVendorIdAndProductId(dataRequest);
     findProduct[0]["isActive"] = false;
-    return this.#productRepository.update(findProduct[0]);
+    return await this.#productRepository.update(findProduct[0]);
+  }
+
+  async getAllProductByName(productName) {
+    productName = String(productName).toLowerCase();
+    return await this.#productRepository.findAllProductByName(productName);
+  }
+
+  async getAllProduct() {
+    return await this.#productRepository.findAllProduct();
   }
 }
 

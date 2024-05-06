@@ -50,7 +50,7 @@ class ProductRepository {
     return response;
   }
 
-  async getAll(vendorId) {
+  async getAllByVendorId(vendorId) {
     const response = await this.#db
       .$queryRaw`SELECT * FROM m_product WHERE vendor_id = ${vendorId} AND is_active = true `;
     return response;
@@ -71,14 +71,28 @@ class ProductRepository {
         updated_at: data.updatedAt,
       },
     });
-
     return response;
   }
 
   async getByIdProduct(productId) {
-    return this.#db.m_product.findUnique({
+    const response = this.#db.m_product.findUnique({
       where: { id: productId },
     });
+    return response;
+  }
+
+  async findAllProductByName(productName) {
+    const response = await this.#db.m_product.findMany({
+      where: { nama_product: productName },
+    });
+    return response;
+  }
+
+  async findAllProduct() {
+    const response = await this.#db.m_product.findMany({
+      where: { is_active: true },
+    });
+    return response;
   }
 }
 
