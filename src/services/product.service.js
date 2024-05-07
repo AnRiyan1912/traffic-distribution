@@ -99,8 +99,10 @@ class ProductService {
   }
 
   async deleteProduct(productId, vendorId) {
-    const dataRequest = { productId, vendorId };
-    const findProduct = await this.getByVendorIdAndProductId(dataRequest);
+    const findProduct = await this.getByVendorIdAndProductId(
+      productId,
+      vendorId
+    );
     findProduct[0]["isActive"] = false;
     return await this.#productRepository.update(findProduct[0]);
   }

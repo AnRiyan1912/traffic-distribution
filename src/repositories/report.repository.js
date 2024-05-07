@@ -27,11 +27,12 @@ class ReportRepository {
   async findByDate(dateFrom, dateTo) {
     return await this.#db.$queryRaw`
       SELECT mr.id, mp.nama_product, mp.id as product_id, mv.nama_vendor, mv.id as nama_vendor, 
-      mr.qty, mp.modal, mp.harga_jual, mr.profit FROM m_report mr
+      mr.qty, mp.modal, mp.harga_jual, mr.profit, CONVERT_TZ(mr.created_at, '+00:00', '+07:00') AS order_date FROM m_report mr
       JOIN m_product mp ON mr.product_id = mp.id
       JOIN m_vendor mv ON mp.vendor_id = mv.id
       WHERE mr.created_at >= ${dateFrom}
-        AND mr.created_at <= ${dateTo}
+      AND mr.created_at <= ${dateTo}
+      ORDER BY mr.created_at DESC
     `;
   }
 }
