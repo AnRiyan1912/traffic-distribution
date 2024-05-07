@@ -11,7 +11,6 @@ const vendorController = {
         .status(200)
         .json({ message: "success create vendor", data: response });
     } catch (err) {
-      console.log(err);
       res.status(400).json({ message: err.message });
     }
   },

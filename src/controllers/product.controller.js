@@ -88,7 +88,6 @@ const productController = {
         .status(200)
         .json({ message: "success update product", data: response });
     } catch (err) {
-      console.log(err);
       res.status(400).json({ message: err.message });
     }
   },
