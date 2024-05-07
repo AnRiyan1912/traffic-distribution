@@ -1,3 +1,4 @@
+const { updateRequestDto } = require("../dto/dataUpdateProduct.dto");
 const { validationOrder } = require("../utils/request.validation");
 const { ProductService } = require("./product.service");
 const { ReportService } = require("./report.service");
@@ -18,24 +19,12 @@ class OrderService {
     if (!findProductByProductId.is_active) {
       throw new Error("product not found");
     }
-    if (!findProductByProductId.qty === 0) {
+    if (findProductByProductId.qty - requestData.qty < 0) {
       throw new Error("product out of stock");
     }
-    const dataUpdateProduct = {
-      id: findProductByProductId.id,
-      productId: findProductByProductId.id,
-      vendorId: findProductByProductId.vendor_id,
-      productName: findProductByProductId.nama_product,
-      dateOfEntry: findProductByProductId.tanggal_masuk,
-      modal: findProductByProductId.modal,
-      qty: findProductByProductId.qty - requestData.qty,
-      sellingPrice: findProductByProductId.harga_jual,
-      isActive: findProductByProductId.is_active,
-      createdAt: findProductByProductId.created_at,
-      updatedAt: findProductByProductId.updated_at,
-    };
-    console.log(dataUpdateProduct);
-    await this.#productService.updateProduct(dataUpdateProduct);
+    await this.#productService.updateProduct(
+      updateRequestDto(findProductByProductId, requestData.qty)
+    );
     const vendorSellingProduct = await this.#productService.getAllProductByName(
       findProductByProductId.nama_product
     );
@@ -50,7 +39,6 @@ class OrderService {
         productWithLeastOrders = product;
       }
     }
-
     const responseCreateReport = await this.#reportService.createReport(
       productWithLeastOrders.id,
       requestData.qty

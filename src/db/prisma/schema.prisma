@@ -25,6 +25,7 @@ model m_product {
   modal          Decimal @db.Decimal(10, 0)
   qty            Int
   harga_jual     Decimal @db.Decimal(10, 0)
+  hpp_per_unit   Decimal @db.Decimal(10, 0) @default(0)
   reports        m_report[]
   is_active      Boolean @default(true)
   created_at     DateTime @default(now())

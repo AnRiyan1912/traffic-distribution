@@ -6,7 +6,7 @@ class ProductRepository {
     this.#db = db.client;
   }
 
-  async create(vendorId, productName, modal, qty, sellingPrice) {
+  async create(vendorId, productName, modal, qty, sellingPrice, hppPerUnit) {
     const response = await this.#db.$transaction([
       this.#db.m_product.create({
         data: {
@@ -15,6 +15,7 @@ class ProductRepository {
           modal: modal,
           qty: qty,
           harga_jual: sellingPrice,
+          hpp_per_unit: hppPerUnit,
         },
       }),
     ]);
@@ -66,6 +67,7 @@ class ProductRepository {
         qty: data.qty,
         vendor_id: data.vendorId,
         harga_jual: data.sellingPrice,
+        hpp_per_unit: data.hppPerUnit,
         is_active: data.isActive,
         created_at: data.createdAt,
         updated_at: data.updatedAt,

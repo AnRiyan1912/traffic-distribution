@@ -1,5 +1,5 @@
 const { ReportRepository } = require("../repositories/report.repository");
-const { getDateFormatDb, getYesterdayDate } = require("../utils/getDate");
+const { getYesterdayDate } = require("../utils/getDate");
 const { ProductService } = require("./product.service");
 const moment = require("moment-timezone");
 
@@ -13,9 +13,8 @@ class ReportService {
 
   async createReport(productId, qty) {
     const findProduct = await this.#productService.getByProductId(productId);
-    const hppPerUnit = findProduct.modal / findProduct.qty;
-    const totalIncome = findProduct.harga_jual * qty;
-    const profit = totalIncome - hppPerUnit * qty;
+    const totalIncome = findProduct.harga_jual - findProduct.hpp_per_unit;
+    const profit = totalIncome * qty;
     return await this.#reportRepository.create(productId, qty, profit);
   }
 

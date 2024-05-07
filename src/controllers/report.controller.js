@@ -9,7 +9,6 @@ const reportController = {
         dateFrom,
         dateTo
       );
-
       res.status(200).json({ message: "success get reports", data: response });
     } catch (err) {
       res.status(400).json({ message: err.message });

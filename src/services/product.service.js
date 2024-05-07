@@ -35,13 +35,14 @@ class ProductService {
     if (findProductExisting) {
       throw new Error("product is already exist");
     }
-
+    const hppPerUnit = modal / qty;
     return await this.#productRepository.create(
       vendorId,
       productName,
       modal,
       qty,
-      sellingPrice
+      sellingPrice,
+      hppPerUnit
     );
   }
 
@@ -75,12 +76,11 @@ class ProductService {
       data.id,
       data.vendorId
     );
-    console.log(checkUpdateSellingPrice[0].harga_jual);
     if (
       parseInt(data.sellingPrice) ===
       parseInt(checkUpdateSellingPrice[0].harga_jual)
     ) {
-      data["updatedAt"] = getDateFormatDb();
+      data["updatedAt"] = await getDateFormatDb();
       return this.#productRepository.update(data);
     } else {
       data.isActive = false;

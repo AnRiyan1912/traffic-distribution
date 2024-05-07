@@ -25,12 +25,10 @@ const productController = {
 
   getById: async (req, res) => {
     try {
-      const dataRequest = {
-        vendorId: parseInt(req.params.vendorId),
-        productId: parseInt(req.params.productId),
-      };
+      const { vendorId, productId } = req.params;
       const responseProduct = await productService.getByVendorIdAndProductId(
-        dataRequest
+        productId,
+        vendorId
       );
       res
         .status(200)
@@ -80,6 +78,7 @@ const productController = {
         modal: req.body.modal,
         qty: req.body.qty,
         sellingPrice: req.body.harga_jual,
+        hppPerProduct: req.body.hpp_per_product,
         isActive: req.body.is_active,
         createdAt: req.body.created_at,
         updatedAt: req.body.updated_at,
