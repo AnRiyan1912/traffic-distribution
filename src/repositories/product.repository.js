@@ -85,7 +85,7 @@ class ProductRepository {
 
   async findAllProductByName(productName) {
     const response = await this.#db.m_product.findMany({
-      where: { nama_product: productName },
+      where: { nama_product: productName, qty: { not: 0 } },
     });
     return response;
   }

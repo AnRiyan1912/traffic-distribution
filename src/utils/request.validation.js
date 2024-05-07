@@ -53,7 +53,7 @@ const validationUpdateProduct = (data) => {
   if (!data.modal) {
     throw new Error("modal is required");
   }
-  if (!data.qty && qty < 0) {
+  if (data.qty < 0 || data.qty === undefined) {
     throw new Error("qty is required");
   }
   if (!data.sellingPrice) {

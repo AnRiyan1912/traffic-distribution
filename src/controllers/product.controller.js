@@ -79,7 +79,7 @@ const productController = {
         qty: req.body.qty,
         sellingPrice: req.body.harga_jual,
         hppPerProduct: req.body.hpp_per_product,
-        isActive: req.body.is_active,
+        isActive: req.body.is_active == 1 ? true : false,
         createdAt: req.body.created_at,
         updatedAt: req.body.updated_at,
       };

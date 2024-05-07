@@ -19,12 +19,6 @@ class OrderService {
     if (!findProductByProductId.is_active) {
       throw new Error("product not found");
     }
-    if (findProductByProductId.qty - requestData.qty < 0) {
-      throw new Error("product out of stock");
-    }
-    await this.#productService.updateProduct(
-      updateRequestDto(findProductByProductId, requestData.qty)
-    );
     const vendorSellingProduct = await this.#productService.getAllProductByName(
       findProductByProductId.nama_product
     );
@@ -39,6 +33,12 @@ class OrderService {
         productWithLeastOrders = product;
       }
     }
+    if (productWithLeastOrders.qty - requestData.qty < 0) {
+      throw new Error("insufficient stock");
+    }
+    await this.#productService.updateProduct(
+      updateRequestDto(productWithLeastOrders, requestData.qty)
+    );
     const responseCreateReport = await this.#reportService.createReport(
       productWithLeastOrders.id,
       requestData.qty

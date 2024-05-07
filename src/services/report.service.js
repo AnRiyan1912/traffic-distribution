@@ -37,7 +37,6 @@ class ReportService {
     const dateToUTC = moment
       .tz(dateTo, "YYYY-MM-DD", "UTC")
       .format("YYYY-MM-DD");
-    console.log(dateFromUTC, dateToUTC);
     return await this.#reportRepository.findByDate(dateFromUTC, dateToUTC);
   }
 }
